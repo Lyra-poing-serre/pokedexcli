@@ -1,9 +1,9 @@
 package main
 
 import (
-	"github.com/Lyra-poing-serre/pokedexcli/internal/pokedex"
+	"github.com/Lyra-poing-serre/pokedexcli/internal/repl"
 )
 
 func main() {
-	pokedex.StartRepl()
+	repl.StartRepl()
 }

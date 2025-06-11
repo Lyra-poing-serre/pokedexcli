@@ -1,4 +1,4 @@
-package pokedexcli
+package repl
 
 import (
 	"bufio"
@@ -7,7 +7,7 @@ import (
 	"strings"
 )
 
-func startRepl() {
+func StartRepl() {
 	scanner := bufio.NewScanner(os.Stdin)
 	for {
 		fmt.Print("Pokedex > ")
