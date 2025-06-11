@@ -1,7 +1,7 @@
 package main
 
 import (
-	"github.com/Lyra-poing-serre/pokedexcli/internal/repl"
+	"github.com/Lyra-poing-serre/pokedexcli/cmd/repl"
 )
 
 func main() {
