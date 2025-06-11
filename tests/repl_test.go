@@ -1,7 +1,9 @@
-package repl
+package tests
 
 import (
 	"testing"
+
+	"github.com/Lyra-poing-serre/pokedexcli/internal/repl"
 )
 
 func TestCleanInput(t *testing.T) {
@@ -19,7 +21,7 @@ func TestCleanInput(t *testing.T) {
 		},
 	}
 	for _, c := range cases {
-		actual := cleanInput(c.input)
+		actual := repl.CleanInput(c.input)
 		// Check the length of the actual slice against the expected slice
 		// if they don't match, use t.Errorf to print an error message
 		// and fail the test

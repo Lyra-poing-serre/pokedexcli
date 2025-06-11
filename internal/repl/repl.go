@@ -16,12 +16,12 @@ func StartRepl() {
 			fmt.Println("No more inputs, exiting...")
 			break
 		}
-		input := cleanInput(scanner.Text())
+		input := CleanInput(scanner.Text())
 		fmt.Printf("Your command was: %s\n", input[0])
 	}
 }
 
-func cleanInput(text string) []string {
+func CleanInput(text string) []string {
 	return strings.Fields(
 		strings.ToLower(text))
 }
