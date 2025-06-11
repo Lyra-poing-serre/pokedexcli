@@ -5,25 +5,20 @@ import (
 	"fmt"
 	"os"
 	"strings"
+
+	"github.com/Lyra-poing-serre/pokedexcli/internal/pokeapi"
 )
 
-type config struct {
-	next     string
-	previous string
+type Config struct {
+	nextUrl    *string
+	prevUrl    *string
+	HttpClient pokeapi.Client
 }
-
-type configStatus int
-
-const (
-	configPrevious configStatus = iota
-	configNext
-)
 
 type cliCommand struct {
 	name        string
 	description string
-	callback    func() error
-	config      *config
+	callback    func(c *Config) error
 }
 
 type command interface {
@@ -34,54 +29,33 @@ func (c cliCommand) Help() string {
 	return fmt.Sprintf("%s: %s", c.name, c.description)
 }
 
-func StartRepl() {
-	const urlLocationArea = "https://pokeapi.co/api/v2/location-area/"
-	emptyConf := config{next: "", previous: ""}
-	mapConfig := &config{next: urlLocationArea, previous: urlLocationArea}
-
-	commandMap, err := initMap(configNext, mapConfig)
-	if err != nil {
-		fmt.Printf("Error while creating map func: %v", err)
-		return
-	}
-	commandMapB, err := initMap(configPrevious, mapConfig)
-	if err != nil {
-		fmt.Printf("Error while creating mapb func: %v", err)
-		return
-	}
-
-	commandDict := map[string]cliCommand{
+func getCommands() map[string]cliCommand {
+	return map[string]cliCommand{
 		"exit": {
 			name:        "exit",
 			description: "Exit the Pokedex.",
 			callback:    commandExit,
-			config:      &emptyConf,
+		},
+		"help": {
+			name:        "help",
+			description: "Displays a help message.",
+			callback:    commandHelp,
 		},
 		"map": {
 			name:        "map",
 			description: "Display the name of the 20 next areas.",
-			callback:    commandMap,
-			config:      mapConfig,
+			callback:    initMap(configNext),
 		},
 		"mapb": {
 			name:        "mapb",
 			description: "Display the name of the 20 previous areas.",
-			callback:    commandMapB,
-			config:      mapConfig,
+			callback:    initMap(configPrevious),
 		},
 	}
-	commandHelp, err := initHelpCommand(&commandDict)
-	if err != nil {
-		fmt.Printf("Error while creating help func: %v", err)
-		return
-	}
-	commandDict["help"] = cliCommand{
-		name:        "help",
-		description: "Displays a help message.",
-		callback:    commandHelp,
-		config:      &emptyConf,
-	}
+}
 
+func StartRepl(conf *Config) {
+	commandDict := getCommands()
 	scanner := bufio.NewScanner(os.Stdin)
 	for {
 		fmt.Print("Pokedex > ")
@@ -97,7 +71,7 @@ func StartRepl() {
 				fmt.Println("Unknown command")
 				continue
 			}
-			err = cmd.callback()
+			err := cmd.callback(conf)
 			if err != nil {
 				fmt.Println(err)
 			}
