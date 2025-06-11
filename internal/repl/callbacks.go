@@ -12,7 +12,7 @@ func commandExit() error {
 	return nil
 }
 
-func initHelp(dict *map[string]cliCommand) (func() error, error) {
+func initHelp(dict *map[string]cliCommand) (commandHelp func() error, err error) {
 	if dict == nil {
 		return func() error { return nil }, errors.New("Empty command dictionnary !")
 	}
