@@ -1,4 +1,4 @@
-package pokedex
+package repl
 
 import (
 	"testing"
