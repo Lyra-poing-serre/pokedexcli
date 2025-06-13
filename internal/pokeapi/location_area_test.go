@@ -10,7 +10,7 @@ import (
 
 func TestGetCachedLocationArea(t *testing.T) {
 	const timing = 20 * time.Second
-	const baseAreaUrl = BaseUrl + "/location-area"
+	const baseAreaUrl = baseUrl + "/location-area"
 	const randMin = 20
 	const randMax = 1088
 	randAreaUrl := baseAreaUrl + fmt.Sprintf("?offset=%d&limit=20", rand.Intn(randMax-randMin)+randMin)

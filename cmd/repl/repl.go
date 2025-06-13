@@ -18,7 +18,7 @@ type Config struct {
 type cliCommand struct {
 	name        string
 	description string
-	callback    func(c *Config) error
+	callback    func(c *Config, areaName string) error
 }
 
 type command interface {
@@ -51,6 +51,11 @@ func getCommands() map[string]cliCommand {
 			description: "Display the name of the 20 previous areas.",
 			callback:    initMap(configPrevious),
 		},
+		"explore": {
+			name:        "explore",
+			description: "Explore an area and found pokemon.",
+			callback:    commandExplore,
+		},
 	}
 }
 
@@ -65,16 +70,15 @@ func StartRepl(conf *Config) {
 			break
 		}
 		inputs := cleanInput(scanner.Text())
-		for _, ipt := range inputs {
-			cmd, ok := commandDict[ipt]
-			if !ok {
-				fmt.Println("Unknown command")
-				continue
-			}
-			err := cmd.callback(conf)
-			if err != nil {
-				fmt.Println(err)
-			}
+		cmd, ok := commandDict[inputs[0]]
+		if !ok {
+			fmt.Println("Unknown command")
+			continue
+		}
+
+		err := cmd.callback(conf, strings.Join(inputs[1:], " "))
+		if err != nil {
+			fmt.Println(err)
 		}
 	}
 }
