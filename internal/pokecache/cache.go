@@ -32,6 +32,8 @@ func (c *Cache) Add(key string, val []byte) {
 		createdAt: time.Now(),
 		val:       val,
 	}
+	// fmt.Print("New cache entry : ")
+	// fmt.Println(c.entry[key])
 }
 
 func (c *Cache) Get(key string) ([]byte, bool) {

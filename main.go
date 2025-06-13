@@ -9,5 +9,5 @@ import (
 
 func main() {
 	repl.StartRepl(
-		&repl.Config{HttpClient: pokeapi.NewClient(30 * time.Second)})
+		&repl.Config{HttpClient: pokeapi.NewClient(30*time.Second, 5*time.Minute)})
 }
