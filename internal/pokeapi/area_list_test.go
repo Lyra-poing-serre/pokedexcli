@@ -43,9 +43,6 @@ func TestGetCachedLocationArea(t *testing.T) {
 	}
 	for _, expected_cache := range cases {
 		var cached_unmar_resp LocationAreaResponse
-		fmt.Println(client.cache)
-		fmt.Print("Testing : ")
-		fmt.Println(expected_cache)
 		cached_resp, ok := client.cache.Get(expected_cache.key)
 
 		if !ok {
