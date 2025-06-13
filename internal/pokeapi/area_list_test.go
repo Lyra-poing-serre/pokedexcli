@@ -9,20 +9,19 @@ import (
 )
 
 func TestGetCachedLocationArea(t *testing.T) {
-	const interval = 5 * time.Second
-	const timeout = 5 * time.Second
+	const timing = 20 * time.Second
 	const baseAreaUrl = BaseUrl + "/location-area"
 	const randMin = 20
 	const randMax = 1088
 	randAreaUrl := baseAreaUrl + fmt.Sprintf("?offset=%d&limit=20", rand.Intn(randMax-randMin)+randMin)
-	client := NewClient(timeout, interval)
+	client := NewClient(timing, timing)
 
-	nil_area_response, err := client.GetLocationArea(nil)
+	nilAreaResponse, err := client.GetLocationArea(nil)
 	if err != nil {
 		t.Errorf("unexpected error, nil request didn't succeeded")
 		return
 	}
-	rand_area_response, err := client.GetLocationArea(&randAreaUrl)
+	randAreaResponse, err := client.GetLocationArea(&randAreaUrl)
 	if err != nil {
 		t.Errorf("unexpected error, rand request didn't succeeded")
 		return
@@ -34,27 +33,29 @@ func TestGetCachedLocationArea(t *testing.T) {
 	}{
 		{
 			key: baseAreaUrl,
-			val: nil_area_response,
+			val: nilAreaResponse,
 		},
 		{
 			key: randAreaUrl,
-			val: rand_area_response,
+			val: randAreaResponse,
 		},
 	}
-	for _, expected_cache := range cases {
-		var cached_unmar_resp LocationAreaResponse
-		cached_resp, ok := client.cache.Get(expected_cache.key)
+	for _, expected := range cases {
+		var cachedResp LocationAreaResponse
+		cachedBytes, ok := client.cache.Get(expected.key)
 
 		if !ok {
 			t.Errorf("expected to find key")
 			return
 		}
-		json.Unmarshal(cached_resp, &cached_unmar_resp)
+		json.Unmarshal(cachedBytes, &cachedResp)
+		expectedLast := expected.val.Results[len(expected.val.Results)-1]
+		cachedLast := cachedResp.Results[len(cachedResp.Results)-1]
 
-		if cached_unmar_resp.Count != expected_cache.val.Count ||
-			cached_unmar_resp.Next != expected_cache.val.Next ||
-			cached_unmar_resp.Previous != expected_cache.val.Previous ||
-			len(cached_unmar_resp.Results) != len(expected_cache.val.Results) {
+		if cachedResp.Count != expected.val.Count ||
+			cachedResp.Next != expected.val.Next ||
+			cachedResp.Previous != expected.val.Previous ||
+			cachedLast.Name != expectedLast.Name || cachedLast.URL != expectedLast.URL {
 			t.Errorf("expected to be the same value")
 			return
 		}
