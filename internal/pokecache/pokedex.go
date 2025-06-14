@@ -1,9 +1,18 @@
 package pokecache
 
+type StatsSummary struct {
+	Name     string
+	BaseStat int
+}
+
 type Pokemon struct {
 	Id             int
 	Name           string
 	BaseExperience int
+	Height         int
+	Weight         int
+	Stats          []StatsSummary
+	Types          []string
 }
 
 type Pokedex struct {
