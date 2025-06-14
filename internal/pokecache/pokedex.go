@@ -1,5 +1,24 @@
 package pokecache
 
 type Pokemon struct {
-	id int64
+	Id             int
+	Name           string
+	BaseExperience int
+}
+
+type Pokedex struct {
+	Pokedex map[string]Pokemon
+	// pokemap map[string]Map  // Pour plus tard ?
+}
+
+func (p *Pokedex) Get(pokemonName string) (pokemon Pokemon, exist bool) {
+	pokemon, exist = p.Pokedex[pokemonName]
+	if !exist {
+		return Pokemon{}, false
+	}
+	return pokemon, true
+}
+
+func (p *Pokedex) Add(pokemon Pokemon) {
+	p.Pokedex[pokemon.Name] = pokemon
 }

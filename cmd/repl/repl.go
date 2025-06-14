@@ -7,12 +7,14 @@ import (
 	"strings"
 
 	"github.com/Lyra-poing-serre/pokedexcli/internal/pokeapi"
+	"github.com/Lyra-poing-serre/pokedexcli/internal/pokecache"
 )
 
 type Config struct {
 	nextUrl    *string
 	prevUrl    *string
 	HttpClient pokeapi.Client
+	Pokedex    pokecache.Pokedex
 }
 
 type cliCommand struct {
@@ -53,8 +55,13 @@ func getCommands() map[string]cliCommand {
 		},
 		"explore": {
 			name:        "explore",
-			description: "Explore an area and found pokemon.",
+			description: "Explore an <area> and found pokemon.",
 			callback:    commandExplore,
+		},
+		"catch": {
+			name:        "catch",
+			description: "Try to catch a pokemon !",
+			callback:    commandCatch,
 		},
 	}
 }

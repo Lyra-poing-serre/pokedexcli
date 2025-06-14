@@ -11,18 +11,18 @@ import (
 
 type Client struct {
 	httpClient http.Client
-	cache      pokecache.Cache
+	Cache      pokecache.Cache
 }
 
 func NewClient(timeout time.Duration, interval time.Duration) Client {
 	return Client{
 		httpClient: http.Client{Timeout: timeout},
-		cache:      pokecache.NewCache(interval),
+		Cache:      pokecache.NewCache(interval),
 	}
 }
 
 func (c *Client) getRequest(url string) (body []byte, err error) {
-	body, ok := c.cache.Get(url)
+	body, ok := c.Cache.Get(url)
 	if ok {
 		//fmt.Print("Retrived cache entry for : ")
 		//fmt.Println(url)
@@ -46,6 +46,6 @@ func (c *Client) getRequest(url string) (body []byte, err error) {
 	if err != nil {
 		return []byte{}, fmt.Errorf("Failed to read data: %w and body:\n %s", err, body)
 	}
-	c.cache.Add(url, body)
+	c.Cache.Add(url, body)
 	return body, nil
 }

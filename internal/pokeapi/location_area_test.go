@@ -42,7 +42,7 @@ func TestGetCachedLocationArea(t *testing.T) {
 	}
 	for _, expected := range cases {
 		var cachedResp LocationAreaResponse
-		cachedBytes, ok := client.cache.Get(expected.key)
+		cachedBytes, ok := client.Cache.Get(expected.key)
 
 		if !ok {
 			t.Errorf("expected to find key")
