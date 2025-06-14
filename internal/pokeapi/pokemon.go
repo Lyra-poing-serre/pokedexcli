@@ -10,7 +10,7 @@ func (c *Client) GetPokemon(pokemonName string) (pokemonResponse PokemonResponse
 	if pokemonName == "" {
 		return PokemonResponse{}, errors.New("Empty pokemonName...")
 	}
-	body, err := c.getRequest(fmt.Sprint(baseUrl, "/pokemon/", pokemonName))
+	body, err := c.getRequest(fmt.Sprint(baseUrl, pokemonEndpoint, pokemonName))
 	if err != nil {
 		return PokemonResponse{}, fmt.Errorf("GET request error with url: %s got this error: %w", pokemonName, err)
 	}
