@@ -18,7 +18,7 @@ type Config struct {
 type cliCommand struct {
 	name        string
 	description string
-	callback    func(c *Config, areaName string) error
+	callback    func(c *Config, argName string) error
 }
 
 type command interface {

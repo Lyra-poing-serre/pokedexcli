@@ -2,15 +2,10 @@ package repl
 
 import (
 	"fmt"
-
-	"github.com/Lyra-poing-serre/pokedexcli/internal/pokeapi"
 )
 
 func commandExplore(c *Config, areaName string) error {
-	var err error
-	var response pokeapi.AreaResponse
-
-	response, err = c.HttpClient.GetArea(areaName)
+	response, err := c.HttpClient.GetArea(areaName)
 	if err != nil {
 		return err
 	}

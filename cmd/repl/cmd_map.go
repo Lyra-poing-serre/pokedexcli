@@ -13,7 +13,7 @@ const (
 	configNext
 )
 
-func initMap(status configStatus) func(c *Config, areaName string) error {
+func initMap(status configStatus) func(c *Config, argName string) error {
 	return func(c *Config, areaName string) error {
 		var err error
 		var response pokeapi.LocationAreaResponse
