@@ -7,14 +7,13 @@ import (
 	"strings"
 
 	"github.com/Lyra-poing-serre/pokedexcli/internal/pokeapi"
-	"github.com/Lyra-poing-serre/pokedexcli/internal/pokecache"
 )
 
 type Config struct {
 	nextUrl    *string
 	prevUrl    *string
 	HttpClient pokeapi.Client
-	Pokedex    pokecache.Pokedex
+	Pokedex    map[string]pokeapi.Pokemon
 }
 
 type cliCommand struct {

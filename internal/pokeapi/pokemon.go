@@ -6,22 +6,22 @@ import (
 	"fmt"
 )
 
-func (c *Client) GetPokemon(pokemonName string) (pokemonResponse PokemonResponse, err error) {
+func (c *Client) GetPokemon(pokemonName string) (pokemonResponse Pokemon, err error) {
 	if pokemonName == "" {
-		return PokemonResponse{}, errors.New("Empty pokemonName...")
+		return Pokemon{}, errors.New("Empty pokemonName...")
 	}
 	body, err := c.getRequest(fmt.Sprint(baseUrl, pokemonEndpoint, pokemonName))
 	if err != nil {
-		return PokemonResponse{}, fmt.Errorf("GET request error with url: %s got this error: %w", pokemonName, err)
+		return Pokemon{}, fmt.Errorf("GET request error with url: %s got this error: %w", pokemonName, err)
 	}
 
 	if err = json.Unmarshal(body, &pokemonResponse); err != nil {
-		return PokemonResponse{}, fmt.Errorf("Failed to decode json, got err: %w\n", err)
+		return Pokemon{}, fmt.Errorf("Failed to decode json, got err: %w\n", err)
 	}
 	return pokemonResponse, nil
 }
 
-type PokemonResponse struct {
+type Pokemon struct {
 	ID             int    `json:"id"`
 	Name           string `json:"name"`
 	BaseExperience int    `json:"base_experience"`

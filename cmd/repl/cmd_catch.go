@@ -5,11 +5,10 @@ import (
 	"math/rand"
 
 	"github.com/Lyra-poing-serre/pokedexcli/internal/pokeapi"
-	"github.com/Lyra-poing-serre/pokedexcli/internal/pokecache"
 )
 
 func commandCatch(c *Config, pokemonName string) error {
-	if _, exist := c.Pokedex.Get(pokemonName); exist {
+	if _, exist := c.Pokedex[pokemonName]; exist {
 		return fmt.Errorf("%s already caught.", pokemonName)
 	}
 
@@ -21,7 +20,7 @@ func commandCatch(c *Config, pokemonName string) error {
 
 	if catchLogic(c, pokemonResp) {
 		fmt.Printf("%s was caught!\n", pokemonResp.Name)
-		c.Pokedex.Add(newPokemon(pokemonResp))
+		c.Pokedex[pokemonResp.Name] = pokemonResp
 		fmt.Println("You may now inspect it with the inspect command.")
 	} else {
 		fmt.Printf("%s escaped!\n", pokemonResp.Name)
@@ -29,7 +28,7 @@ func commandCatch(c *Config, pokemonName string) error {
 	return nil
 }
 
-func catchLogic(c *Config, pokemonResp pokeapi.PokemonResponse) bool {
+func catchLogic(c *Config, pokemonResp pokeapi.Pokemon) bool {
 	nbTries, exist := c.HttpClient.Cache.Get(pokemonResp.Name)
 	userChance := rand.Intn(pokemonResp.BaseExperience * 2) // catch si au moins chance >= de la base exp
 	triesBuffer := make([]byte, 1)
@@ -47,29 +46,4 @@ func catchLogic(c *Config, pokemonResp pokeapi.PokemonResponse) bool {
 		}
 	}
 	return true
-}
-
-func newPokemon(pokemon pokeapi.PokemonResponse) pokecache.Pokemon {
-	pkmTypes := make([]string, len(pokemon.Types))
-	for i, new := range pokemon.Types {
-		pkmTypes[i] = new.Type.Name
-	}
-
-	pkmStats := make([]pokecache.StatsSummary, len(pokemon.Stats))
-	for i, new := range pokemon.Stats {
-		pkmStats[i] = pokecache.StatsSummary{
-			Name:     new.Stat.Name,
-			BaseStat: new.BaseStat,
-		}
-	}
-
-	return pokecache.Pokemon{
-		Id:             pokemon.ID,
-		Name:           pokemon.Name,
-		BaseExperience: pokemon.BaseExperience,
-		Height:         pokemon.Height,
-		Weight:         pokemon.Weight,
-		Stats:          pkmStats,
-		Types:          pkmTypes,
-	}
 }
